@@ -6,7 +6,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+// Lowest number has highest priority
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DemoUtilsTest {
 
     DemoUtils demoUtils;
@@ -18,6 +19,7 @@ class DemoUtilsTest {
 
     @Test
     @DisplayName("Equals and Not Equals")
+    @Order(1)
     void testEqualAndNotEquals() {
 
         assertEquals(6, demoUtils.add(2, 4), "2+4 must be 6");
@@ -26,6 +28,7 @@ class DemoUtilsTest {
 
     @Test
     @DisplayName("Null and Not Null")
+    @Order(2)
     void testNullAndNotNull() {
 
         String nullStr = null;
@@ -37,6 +40,7 @@ class DemoUtilsTest {
 
     @DisplayName("Same and Not Same")
     @Test
+    @Order(3)
     void testSameAndNotSame() {
 
         String myStr = "a string";
@@ -47,6 +51,7 @@ class DemoUtilsTest {
 
     @DisplayName("True and False")
     @Test
+    @Order(4)
     void testTrueFalse() {
         int gradeOne = 10;
         int gradeTwo = 5;
@@ -57,6 +62,7 @@ class DemoUtilsTest {
 
     @DisplayName("Array Equals")
     @Test
+    @Order(10)
     void testArrayEquals() {
         String[] stringArray = {"A", "B", "C"};
 
@@ -65,6 +71,7 @@ class DemoUtilsTest {
 
     @DisplayName("Iterable Equals")
     @Test
+    @Order(20)
     void testIterableEquals() {
         List<String> theList = List.of("luv", "2", "code");
         assertIterableEquals(theList, demoUtils.getAcademyInList(), "Both lists should be the same");
@@ -72,6 +79,7 @@ class DemoUtilsTest {
 
     @DisplayName("Lines matchIterable Equals")
     @Test
+    @Order(30)
     void testLinesMatch() {
         List<String> theList = List.of("luv", "2", "code");
         assertLinesMatch(theList, demoUtils.getAcademyInList(), "Lines should should be the same");
