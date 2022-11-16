@@ -1,4 +1,4 @@
-package com.luv2code.junitdemo;
+package com.josealonso.junitdemo;
 
 import java.util.List;
 
@@ -34,6 +34,7 @@ public class DemoUtils {
     }
 
     public Object checkNull(Object obj) {
+
         if (obj != null) {
             return obj;
         }
