@@ -2,18 +2,18 @@ package com.josealonso.tdd;
 
 public class FizzBuzz {
     public static String compute(int i) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         if (i % 3 == 0) {
-            result = "Fizz";
+            result.append("Fizz");
         }
         if (i % 5 == 0) {
-            result += "Buzz";
-        } else if (!(i % 3 == 0) && !(i % 5 == 0)) {
-            // result = String.valueOf(i);
-            result = Integer.toString(i);
+            result.append("Buzz");
         }
-        return result;
-    }
+        if (result.isEmpty()) {
+            result.append(i);
+        }
 
+        return result.toString();
+    }
 }
