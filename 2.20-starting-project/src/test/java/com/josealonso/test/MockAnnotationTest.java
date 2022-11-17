@@ -8,14 +8,13 @@ import com.josealonso.component.service.ApplicationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = MvcTestingExampleApplication.class)
@@ -30,11 +29,9 @@ public class MockAnnotationTest {
     @Autowired
     StudentGrades studentGrades;
 
-    // @Mock
     @MockBean
     private ApplicationDao applicationDao;
 
-    // @InjectMocks
     @Autowired
     private ApplicationService applicationService;
 
@@ -71,7 +68,36 @@ public class MockAnnotationTest {
 
         verify(applicationDao, times(1)).findGradePointAverage(
                 studentGrades.getMathGradeResults());
-
     }
 
+    @DisplayName("Throw runtime error")
+    @Test
+    public void throwRuntimeError() {
+        var nullStudent = (CollegeStudent) context.getBean("collegeStudent");
+
+        doThrow(new RuntimeException()).when(applicationDao).checkNull(nullStudent);
+
+        assertThrows(RuntimeException.class, () ->
+                applicationService.checkNull(nullStudent));
+
+        verify(applicationDao, times(1)).checkNull(nullStudent);
+    }
+
+    @DisplayName("Multiple Stubbing")
+    @Test
+    public void stubbingConsecutiveCalls() {
+        CollegeStudent nullStudent = (CollegeStudent) context.getBean("collegeStudent");
+
+        when(applicationDao.checkNull(nullStudent))
+                .thenThrow(new RuntimeException())
+                .thenReturn("Do not throw exception second time");
+
+        assertThrows(RuntimeException.class, () ->
+                applicationService.checkNull(nullStudent));
+
+        assertEquals("Do not throw exception second time",
+                applicationService.checkNull(nullStudent));
+
+        verify(applicationDao, times(2)).checkNull(nullStudent);
+    }
 }
