@@ -4,12 +4,16 @@ import com.josealonso.component.MvcTestingExampleApplication;
 import com.josealonso.component.models.CollegeStudent;
 import com.josealonso.component.models.StudentGrades;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 @SpringBootTest(classes = MvcTestingExampleApplication.class)
 public class ApplicationExampleTest {
@@ -34,6 +38,9 @@ public class ApplicationExampleTest {
     @Autowired
     StudentGrades studentGrades;
 
+    @Autowired
+    ApplicationContext context;
+
     @BeforeEach
     public void beforeEach() {
         count = count + 1;
@@ -46,8 +53,11 @@ public class ApplicationExampleTest {
         student.setStudentGrades(studentGrades);
     }
 
+    @DisplayName("Verify Students are prototypes")
     @Test
-    void basicTest() {
-
+    public void verifyStudentsArePrototypes() {
+        CollegeStudent studentTwo = context.getBean("collegeStudent", CollegeStudent.class);
+        assertNotSame(student, studentTwo);
     }
+
 }
