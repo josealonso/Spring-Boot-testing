@@ -81,7 +81,7 @@ public class StudentAndGradeServiceTest {
         List<CollegeStudent> collegeStudents = new ArrayList<>();
 
         // Convert an Iterable to a List
-        for (CollegeStudent collegeStudent: iterableCollegeStudents) {
+        for (CollegeStudent collegeStudent : iterableCollegeStudents) {
             collegeStudents.add(collegeStudent);
         }
 
