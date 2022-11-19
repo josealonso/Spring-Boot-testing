@@ -5,14 +5,13 @@ import com.josealonso.springmvc.repository.StudentDao;
 import com.josealonso.springmvc.service.StudentAndGradeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,6 @@ public class StudentAndGradeServiceTest {
 
     @BeforeEach
     public void setupDatabase() {
-        jdbc.execute("delete from student");
         // int result = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EMPLOYEE", Integer.class);
 
         jdbc.update("INSERT INTO student VALUES (?, ?, ?, ?)", 1, "John", "Smith", "john@school.com");
@@ -66,15 +64,16 @@ public class StudentAndGradeServiceTest {
         assertFalse(studentService.checkIfStudentIsNull(0));
     }
 
-    @Test
+/*    @Test
     public void deleteStudentService() {
         Optional<CollegeStudent> deletedCollegeStudent = studentDao.findById(1);
         assertTrue(deletedCollegeStudent.isPresent(), "Return true");
         studentService.deleteStudent(1);
         deletedCollegeStudent = studentDao.findById(1);
         assertFalse(deletedCollegeStudent.isPresent(), "Return false");
-    }
+    } */
 
+    @Sql("/insertData.sql")
     @Test
     public void getGradeBookService() {
         Iterable<CollegeStudent> iterableCollegeStudents = studentService.getGradebook();
@@ -86,7 +85,7 @@ public class StudentAndGradeServiceTest {
             collegeStudents.add(collegeStudent);
         }
 
-        assertEquals(1, collegeStudents.size());
+        assertEquals(2, collegeStudents.size());
     }
 
     @AfterEach
