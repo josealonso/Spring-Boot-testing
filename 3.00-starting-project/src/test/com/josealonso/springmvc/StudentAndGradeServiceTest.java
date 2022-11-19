@@ -14,6 +14,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,12 +66,27 @@ public class StudentAndGradeServiceTest {
         assertFalse(studentService.checkIfStudentIsNull(0));
     }
 
+    @Test
     public void deleteStudentService() {
         Optional<CollegeStudent> deletedCollegeStudent = studentDao.findById(1);
         assertTrue(deletedCollegeStudent.isPresent(), "Return true");
         studentService.deleteStudent(1);
         deletedCollegeStudent = studentDao.findById(1);
         assertFalse(deletedCollegeStudent.isPresent(), "Return false");
+    }
+
+    @Test
+    public void getGradeBookService() {
+        Iterable<CollegeStudent> iterableCollegeStudents = studentService.getGradebook();
+
+        List<CollegeStudent> collegeStudents = new ArrayList<>();
+
+        // Convert an Iterable to a List
+        for (CollegeStudent collegeStudent: iterableCollegeStudents) {
+            collegeStudents.add(collegeStudent);
+        }
+
+        assertEquals(1, collegeStudents.size());
     }
 
     @AfterEach
