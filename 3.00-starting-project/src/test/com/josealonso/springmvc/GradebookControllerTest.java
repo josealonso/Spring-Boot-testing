@@ -25,10 +25,9 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestPropertySource("/application.properties")
@@ -114,6 +113,34 @@ public class GradebookControllerTest {
 
         assertNotNull(verifyStudent, "Student should be found");
 
+    }
+
+    @Test
+    public void deleteStudentHttpRequest() throws Exception {
+
+        assertTrue(studentDao.findById(1).isPresent());
+
+        MvcResult mvcResult = this.mockMvc.perform(get
+                        ("/delete/student/{id}", 1))
+                .andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "index");
+
+        assertFalse(studentDao.findById(1).isPresent(), "Student should have been deleted");
+    }
+
+    @Test
+    public void deleteStudentHttpRequestErrorPage() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(get
+                        ("/delete/student/{id}", 0))
+                .andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "error");
     }
 
     @AfterEach
