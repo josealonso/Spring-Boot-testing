@@ -1,6 +1,8 @@
 package com.josealonso.springmvc;
 
 import com.josealonso.springmvc.models.CollegeStudent;
+import com.josealonso.springmvc.models.MathGrade;
+import com.josealonso.springmvc.repository.MathGradesDao;
 import com.josealonso.springmvc.repository.StudentDao;
 import com.josealonso.springmvc.service.StudentAndGradeService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,9 @@ public class StudentAndGradeServiceTest {
 
     @Autowired
     private StudentDao studentDao;
+
+    @Autowired
+    private MathGradesDao mathGradeDao;
 
     @BeforeEach
     public void setupDatabase() {
@@ -84,6 +89,15 @@ public class StudentAndGradeServiceTest {
         }
 
         assertEquals(2, collegeStudents.size());
+    }
+
+    @Test
+    public void createGradeService() {
+        assertTrue(studentService.createGrade(80.50, 1, "math"));
+
+        Iterable<MathGrade> mathGrades = mathGradeDao.findGradeByStudentId(1);
+
+        assertTrue(mathGrades.iterator().hasNext(), "Student should have math grades");
     }
 
     @AfterEach

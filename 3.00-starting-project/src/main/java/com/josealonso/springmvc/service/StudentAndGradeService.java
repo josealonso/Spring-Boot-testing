@@ -1,11 +1,13 @@
 package com.josealonso.springmvc.service;
 
 import com.josealonso.springmvc.models.CollegeStudent;
+import com.josealonso.springmvc.models.MathGrade;
+import com.josealonso.springmvc.repository.MathGradesDao;
 import com.josealonso.springmvc.repository.StudentDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -17,6 +19,13 @@ public class StudentAndGradeService {
 
     @Autowired
     private StudentDao studentDao;
+
+    @Autowired
+    private MathGradesDao mathGradesDao;
+
+    @Autowired
+    @Qualifier("mathGrades")
+    private MathGrade mathGrade;
 
     public void createStudent(String firstName, String lastName, String emailAddress) {
         CollegeStudent student = new CollegeStudent(firstName, lastName, emailAddress);
@@ -45,4 +54,24 @@ public class StudentAndGradeService {
         return collegeStudents;
         // return studentDao.findAll();  // This also works
     }
+
+    public boolean createGrade(double grade, int studentId, String gradeType) {
+
+        if (!checkIfStudentIsNull(studentId)) {
+            return false;
+        }
+
+        if (grade >= 0 && grade <= 100) {
+            if (gradeType.equals("math")) {
+                mathGrade.setId(0);
+                mathGrade.setGrade(grade);
+                mathGrade.setStudentId(studentId);
+                mathGradesDao.save(mathGrade);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
