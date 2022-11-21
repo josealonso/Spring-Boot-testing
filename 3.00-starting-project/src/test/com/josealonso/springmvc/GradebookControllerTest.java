@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -59,9 +60,8 @@ public class GradebookControllerTest {
 
     @BeforeEach
     public void setupDatabase() {
-        jdbc.execute("insert into student(id, firstname, lastname, email_address) values " +
-                "(10, 'John', 'Smith', 'johnnni@school.com')");
-        // jdbc.execute("INSERT INTO student VALUES (?, ?, ?, ?)", 1, "John", "Smith", "john@school.com");
+        // jdbc.execute("insert into student(id, firstname, lastname, email_address) values " + "(10, 'John', 'Smith', 'johnnni@school.com')");
+        jdbc.update("INSERT INTO student VALUES (?, ?, ?, ?)", 1, "John", "Smith", "john@school.com");
     }
 
     @Test
@@ -88,6 +88,15 @@ public class GradebookControllerTest {
 
     @Test
     public void createStudentHttpRequest() throws Exception {
+
+        CollegeStudent studentOne = new CollegeStudent("Eric",
+                "Marvel", "eric@school.com");
+
+        List<CollegeStudent> collegeStudentList = new ArrayList<>(List.of(studentOne));
+
+        when(studentCreateServiceMock.getGradebook()).thenReturn(collegeStudentList);
+
+        assertIterableEquals(collegeStudentList, studentCreateServiceMock.getGradebook());
 
         MvcResult mvcResult = this.mockMvc.perform(post("/")
                         .contentType(MediaType.APPLICATION_JSON)
