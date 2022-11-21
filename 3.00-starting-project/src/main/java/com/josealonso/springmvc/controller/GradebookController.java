@@ -1,14 +1,12 @@
 package com.josealonso.springmvc.controller;
 
+import com.josealonso.springmvc.models.CollegeStudent;
 import com.josealonso.springmvc.models.Gradebook;
 import com.josealonso.springmvc.service.StudentAndGradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class GradebookController {
@@ -25,7 +23,6 @@ public class GradebookController {
         var collegeStudents = studentService.getGradebook();
         m.addAttribute("students", collegeStudents);
         return "index";
-        // return (String) m.getAttribute("students");
     }
 
     @GetMapping("/studentInformation/{id}")
@@ -33,4 +30,19 @@ public class GradebookController {
         return "studentInformation";
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public String createStudent(@ModelAttribute("student") CollegeStudent student, Model m) {
+        studentService.createStudent(student.getFullName(), student.getLastname(),
+                student.getEmailAddress());
+        return "index";
+    }
+
 }
+
+
+
+
+
+
+
+

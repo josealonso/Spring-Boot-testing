@@ -15,7 +15,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +35,6 @@ public class StudentAndGradeServiceTest {
     @BeforeEach
     public void setupDatabase() {
         // int result = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EMPLOYEE", Integer.class);
-
         jdbc.update("INSERT INTO student VALUES (?, ?, ?, ?)", 1, "John", "Smith", "john@school.com");
         // jdbc.execute("insert into student(id, firstname, lastname, email_address) " +   // This SQL statement does not work !!
         //      "values (1, 'John', 'Smith', 'john@school.com')");
