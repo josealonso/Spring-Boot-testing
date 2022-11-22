@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,9 +115,12 @@ public class StudentAndGradeServiceTest {
         Iterable<ScienceGrade> scienceGrades = scienceGradeDao.findGradeByStudentId(1);
         Iterable<HistoryGrade> historyGrades = historyGradeDao.findGradeByStudentId(1);
 
-        assertTrue(mathGrades.iterator().hasNext(), "Student should have math grades");
-        assertTrue(scienceGrades.iterator().hasNext(), "Student should have science grades");
-        assertTrue(historyGrades.iterator().hasNext(), "Student should have history grades");
+        assertTrue(((Collection<MathGrade>) mathGrades).size() == 2,
+                "Student should have math grades");
+        assertTrue(((Collection<ScienceGrade>) scienceGrades).size() == 2,
+                "Student should have science grades");
+        assertTrue(((Collection<HistoryGrade>) historyGrades).size() == 2,
+                "Student should have history grades");
     }
 
     @Test
