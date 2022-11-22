@@ -53,6 +53,9 @@ public class StudentAndGradeServiceTest {
         jdbc.update("INSERT INTO student VALUES (?, ?, ?, ?)", 1, "John", "Smith", "john@school.com");
         // jdbc.execute("insert into student(id, firstname, lastname, email_address) " +   // This SQL statement does not work !!
         //      "values (1, 'John', 'Smith', 'john@school.com')");
+        jdbc.update("INSERT INTO math_grade VALUES (?, ?, ?)", 1, 1, 100.00);
+        jdbc.update("INSERT INTO science_grade VALUES (?, ?, ?)", 1, 1, 100.00);
+        jdbc.update("INSERT INTO history_grade VALUES (?, ?, ?)", 1, 1, 100.00);
     }
 
     @Test
@@ -131,6 +134,9 @@ public class StudentAndGradeServiceTest {
     @AfterEach
     public void setupAfterTransaction() {
         jdbc.execute("delete from student");
+        jdbc.execute("delete from math_grade");
+        jdbc.execute("delete from science_grade");
+        jdbc.execute("delete from history_grade");
     }
 
 }
