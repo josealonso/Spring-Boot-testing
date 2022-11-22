@@ -116,6 +116,18 @@ public class StudentAndGradeServiceTest {
         assertTrue(historyGrades.iterator().hasNext(), "Student should have history grades");
     }
 
+    @Test
+    public void createGradeServiceReturnFalse() {
+        int valueOutOfRange = 105;
+        int negativeValue = -5;
+        int invalidStudentId = 2;
+        String invalidSubject = "literature";
+        assertFalse(studentService.createGrade(valueOutOfRange, 1, "math"));
+        assertFalse(studentService.createGrade(negativeValue, 1, "math"));
+        assertFalse(studentService.createGrade(80.50, invalidStudentId, "math"));
+        assertFalse(studentService.createGrade(80.50, 1, invalidSubject));
+    }
+
     @AfterEach
     public void setupAfterTransaction() {
         jdbc.execute("delete from student");
