@@ -1,8 +1,12 @@
 package com.josealonso.springmvc;
 
 import com.josealonso.springmvc.models.CollegeStudent;
+import com.josealonso.springmvc.models.HistoryGrade;
 import com.josealonso.springmvc.models.MathGrade;
+import com.josealonso.springmvc.models.ScienceGrade;
+import com.josealonso.springmvc.repository.HistoryGradesDao;
 import com.josealonso.springmvc.repository.MathGradesDao;
+import com.josealonso.springmvc.repository.ScienceGradesDao;
 import com.josealonso.springmvc.repository.StudentDao;
 import com.josealonso.springmvc.service.StudentAndGradeService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +40,12 @@ public class StudentAndGradeServiceTest {
 
     @Autowired
     private MathGradesDao mathGradeDao;
+
+    @Autowired
+    private ScienceGradesDao scienceGradeDao;
+
+    @Autowired
+    private HistoryGradesDao historyGradeDao;
 
     @BeforeEach
     public void setupDatabase() {
@@ -94,10 +104,16 @@ public class StudentAndGradeServiceTest {
     @Test
     public void createGradeService() {
         assertTrue(studentService.createGrade(80.50, 1, "math"));
+        assertTrue(studentService.createGrade(80.50, 1, "science"));
+        assertTrue(studentService.createGrade(80.50, 1, "history"));
 
         Iterable<MathGrade> mathGrades = mathGradeDao.findGradeByStudentId(1);
+        Iterable<ScienceGrade> scienceGrades = scienceGradeDao.findGradeByStudentId(1);
+        Iterable<HistoryGrade> historyGrades = historyGradeDao.findGradeByStudentId(1);
 
         assertTrue(mathGrades.iterator().hasNext(), "Student should have math grades");
+        assertTrue(scienceGrades.iterator().hasNext(), "Student should have science grades");
+        assertTrue(historyGrades.iterator().hasNext(), "Student should have history grades");
     }
 
     @AfterEach
