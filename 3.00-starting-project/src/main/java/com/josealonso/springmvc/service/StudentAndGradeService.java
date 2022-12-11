@@ -1,9 +1,6 @@
 package com.josealonso.springmvc.service;
 
-import com.josealonso.springmvc.models.CollegeStudent;
-import com.josealonso.springmvc.models.HistoryGrade;
-import com.josealonso.springmvc.models.MathGrade;
-import com.josealonso.springmvc.models.ScienceGrade;
+import com.josealonso.springmvc.models.*;
 import com.josealonso.springmvc.repository.HistoryGradesDao;
 import com.josealonso.springmvc.repository.MathGradesDao;
 import com.josealonso.springmvc.repository.ScienceGradesDao;
@@ -14,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -44,6 +43,9 @@ public class StudentAndGradeService {
 
     @Autowired
     private HistoryGradesDao historyGradesDao;
+
+    @Autowired
+    private StudentGrades studentGrades;
 
     public void createStudent(String firstName, String lastName, String emailAddress) {
         CollegeStudent student = new CollegeStudent(firstName, lastName, emailAddress);
@@ -138,5 +140,36 @@ public class StudentAndGradeService {
         }
 
         return studentId;
+    }
+
+    public GradebookCollegeStudent studentInformation(int id) {
+
+        if (!checkIfStudentIsNull(id)) {
+            return null;
+        }
+        
+        Optional<CollegeStudent> student = studentDao.findById(id);
+        Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(id);
+        Iterable<ScienceGrade> scienceGrades = scienceGradesDao.findGradeByStudentId(id);
+        Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(id);
+
+        List<Grade> mathGradesList = new ArrayList<>();
+        mathGrades.forEach(mathGradesList::add);
+
+        List<Grade> scienceGradesList = new ArrayList<>();
+        scienceGrades.forEach(scienceGradesList::add);
+
+        List<Grade> historyGradesList = new ArrayList<>();
+        historyGrades.forEach(historyGradesList::add);
+
+        studentGrades.setMathGradeResults(mathGradesList);
+        studentGrades.setScienceGradeResults(scienceGradesList);
+        studentGrades.setHistoryGradeResults(historyGradesList);
+
+        GradebookCollegeStudent gradebookCollegeStudent = new GradebookCollegeStudent(student.get().getId(),
+                student.get().getFirstname(), student.get().getLastname(), student.get().getEmailAddress(),
+                studentGrades);
+
+        return gradebookCollegeStudent;
     }
 }

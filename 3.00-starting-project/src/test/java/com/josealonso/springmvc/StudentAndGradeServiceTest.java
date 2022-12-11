@@ -1,9 +1,6 @@
 package com.josealonso.springmvc;
 
-import com.josealonso.springmvc.models.CollegeStudent;
-import com.josealonso.springmvc.models.HistoryGrade;
-import com.josealonso.springmvc.models.MathGrade;
-import com.josealonso.springmvc.models.ScienceGrade;
+import com.josealonso.springmvc.models.*;
 import com.josealonso.springmvc.repository.HistoryGradesDao;
 import com.josealonso.springmvc.repository.MathGradesDao;
 import com.josealonso.springmvc.repository.ScienceGradesDao;
@@ -169,6 +166,26 @@ public class StudentAndGradeServiceTest {
                 "No student should have 0 id");
         assertEquals(0, studentService.deleteGrade(1, "literature"),
                 "No student should have a literature class");
+    }
+
+    @Test
+    public void studentInformation() {
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(1);
+
+        assertNotNull(gradebookCollegeStudent);
+        assertEquals(1, gradebookCollegeStudent.getId());
+        assertEquals("John", gradebookCollegeStudent.getFirstname());
+        assertEquals("Smith", gradebookCollegeStudent.getLastname());
+        assertEquals("john@school.com", gradebookCollegeStudent.getEmailAddress());
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getMathGradeResults().size() == 1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults().size() == 1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size() == 1);
+    }
+
+    @Test
+    public void studentInformationServiceAndReturnNull() {
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(0);
+        assertNull(gradebookCollegeStudent);
     }
 
     @AfterEach
