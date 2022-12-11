@@ -19,7 +19,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -27,7 +26,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestPropertySource("/application.properties")
@@ -77,7 +77,7 @@ public class GradebookControllerTest {
 
         assertIterableEquals(collegeStudentList, studentCreateServiceMock.getGradebook());
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/"))
+        MvcResult mvcResult = mockMvc.perform(get("/"))
                 .andExpect(status().isOk()).andReturn();
 
         ModelAndView mav = mvcResult.getModelAndView();
