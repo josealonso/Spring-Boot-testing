@@ -25,7 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@TestPropertySource("/application.properties")
+@TestPropertySource("/application-test.properties")
 @SpringBootTest
 public class StudentAndGradeServiceTest {
 
@@ -81,14 +81,14 @@ public class StudentAndGradeServiceTest {
 
     @Test
     public void createStudentService() {
-        studentService.createStudent("John", "Smith",
-                "john@school.com");
+        studentService.createStudent("John2", "Smith2",
+                "john2@school.com");
 
         CollegeStudent student = studentDao.
-                findByEmailAddress("john@school.com");
+                findByEmailAddress("john2@school.com");
 
         log.info("============= SERVICE TEST: right after findByEmailAddress(); ===========");
-        assertEquals("john@school.com",
+        assertEquals("john2@school.com",
                 student.getEmailAddress(), "find by email");
     }
 
