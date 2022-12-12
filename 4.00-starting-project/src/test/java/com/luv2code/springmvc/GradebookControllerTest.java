@@ -21,10 +21,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @TestPropertySource("/application-test.properties")
 @AutoConfigureMockMvc
@@ -109,8 +116,33 @@ public class GradebookControllerTest {
     }
 
     @Test
-    public void placeHolder() {
+    public void getStudentsHttpRequest() throws Exception {
+        student.setFirstname("Michael");
+        student.setLastname("Jackson");
+        student.setEmailAddress("michael@school.com");
+        entityManager.persist(student);
+        entityManager.flush();
 
+        mockMvc.perform(MockMvcRequestBuilders.get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void createStudentHttpRequest() throws Exception {
+        student.setFirstname("Michael");
+        student.setLastname("Jackson");
+        student.setEmailAddress("michael@school.com");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(student)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+
+        CollegeStudent verifyStudent = studentDao.findByEmailAddress("michael@school.com");
+        assertNotNull(verifyStudent, "Student should be valid.");
     }
 
     @AfterEach
